@@ -5,18 +5,18 @@ import az.ingress.mscategory.mapper.CategoryMapper;
 import az.ingress.mscategory.model.response.CategoryDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryService {
 
-    CategoryRepository categoryRepository;
-    CategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public List<CategoryDto> getRootCategories() {
         var categoryEntityList = categoryRepository.findAll().stream().filter(categoryDocument -> categoryDocument.getChildren() != null && !categoryDocument.getChildren().isEmpty()).toList();

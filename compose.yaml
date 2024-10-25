@@ -1,21 +1,25 @@
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USERNAME} # Set your username
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}  # Set your password
+      POSTGRES_DB: ${POSTGRESQL_DB}  # Set your database name
     ports:
-      - ${MONGO_PORT}  # Expose MongoDB on localhost:27017
+      - ${POSTGRESQL_PORT}
     volumes:
-      - mongo_data:/data/db  # Volume to persist MongoDB data
+      - postgres_data:/var/lib/postgresql/data  # Persist data
 
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
     ports:
       - ${RABBIT_PORT}  # RabbitMQ default port
-      - ${RABBITUI_PORT}  # RabbitMQ management UI port
+      - ${RABBIT_UI_PORT}  # RabbitMQ management UI port
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}  # Set your RabbitMQ username
-      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}  # Set your RabbitMQ password
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}  # Set your RabbitMQ password
 
   redis:
     image: redis:latest
@@ -24,4 +28,4 @@ services:
       - ${REDIS_PORT}  # Redis default port
 
 volumes:
-  mongo_data:  # Named volume for MongoDB data persistence
+  postgres_data:  # Named volume for Postgres data persistence

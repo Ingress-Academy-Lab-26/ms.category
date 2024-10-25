@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1729889067425-1
+      author: User
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_categoryentity
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: parent_id
+                  type: BIGINT
+            tableName: categories
+  - changeSet:
+      id: 1729889067425-2
+      author: User
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_id
+            baseTableName: categories
+            constraintName: FK_CATEGORYENTITY_ON_PARENT
+            referencedColumnNames: id
+            referencedTableName: categories
+
