@@ -12,15 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/categories")
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CategoryController {
 
-    CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getCategories() {
-        return ResponseEntity.ok(categoryService.getRootCategories());
+    public List<CategoryDto> getCategories() {
+        return categoryService.getRootCategories();
     }
 
 }

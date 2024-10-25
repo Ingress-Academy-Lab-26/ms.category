@@ -2,9 +2,10 @@ spring:
   application:
     name: ms-category
   #DATABASE CONFIG PROPERTIES
-  data:
-    mongodb:
-      uri: mongodb://${MONGO_HOST}:27017/${MONGO_DB}
+  datasource:
+    url: jdbc:postgresql://${POSTGRESQL_HOST}:5432/${POSTGRESQL_DB}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
   jpa:
     generate-ddl: false
     hibernate:
@@ -15,26 +16,34 @@ spring:
         show_sql: true
         format_sql: true
     open-in-view: false
+  liquibase:
+    change-log: classpath:/liquibase/db.changelog-master.yml
 
   #RABBITMQ CONFIG PROPERTIES
-  rabbitmq:
-    host: localhost
-    username: ${RABBIT_USER}
-    password: ${RABBIT_PASS}
-    port: 5672
-    listener:
-      simple:
-        retry:
-          enabled: true
-          initial-interval: 3s
-          max-attempts: 5
-          max-interval: 5s
-          multiplier: 1
-        missing-queues-fatal: false
-    publisher-confirm-type: simple
-    publisher-returns: true
-    template:
-      mandatory: true
+#  rabbitmq:
+#    host: ${RABBIT_HOST}
+#    username: ${RABBIT_USER}
+#    password: ${RABBIT_PASS}
+#    port: 5672
+#    listener:
+#      simple:
+#        retry:
+#          enabled: true
+#          initial-interval: 3s
+#          max-attempts: 5
+#          max-interval: 5s
+#          multiplier: 1
+#        missing-queues-fatal: false
+#    publisher-confirm-type: simple
+#    publisher-returns: true
+#    template:
+#      mandatory: true
+#product:
+#  batch:
+#    size: 20
+#  queue: productQueue
+#  exchange: productExchange
+#  routing-key: product.routingKey
 
 #OPEN-API CONFIG PROPERTIES
 springdoc:
@@ -47,22 +56,6 @@ springdoc:
 logging:
   pattern:
     level: "%5p [${spring.application.name:unknown}], [%X{traceId:-}], [%X{spanId:-}], [%X{X-SERVICE-NAME:-}], [%X{S-SOURCE-KEY:-}]"
-
-#SERVER CONFIG PROPERTIES
-server:
-  port: 8080
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,loggers
-  tracing:
-    sampling:
-      probability: 1
-    baggage:
-      correlation:
-        fields: X-SERVICE-NAME, S-SOURCE-KEY
-      remote-fields: X-SERVICE-NAME, S-SOURCE-KEY
 
 #REDIS CONFIG PROPERTIES
 redis:
