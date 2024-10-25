@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: ms-category
+  #DATABASE CONFIG PROPERTIES
+  data:
+    mongodb:
+      uri: mongodb://${MONGO_HOST}:27017/${MONGO_DB}
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    open-in-view: false
+
+  #RABBITMQ CONFIG PROPERTIES
+  rabbitmq:
+    host: localhost
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASS}
+    port: 5672
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 5
+          max-interval: 5s
+          multiplier: 1
+        missing-queues-fatal: false
+    publisher-confirm-type: simple
+    publisher-returns: true
+    template:
+      mandatory: true
+
+#OPEN-API CONFIG PROPERTIES
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+#LOGGING CONFIG PROPERTIES
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:unknown}], [%X{traceId:-}], [%X{spanId:-}], [%X{X-SERVICE-NAME:-}], [%X{S-SOURCE-KEY:-}]"
+
+#SERVER CONFIG PROPERTIES
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,loggers
+  tracing:
+    sampling:
+      probability: 1
+    baggage:
+      correlation:
+        fields: X-SERVICE-NAME, S-SOURCE-KEY
+      remote-fields: X-SERVICE-NAME, S-SOURCE-KEY
+
+#REDIS CONFIG PROPERTIES
+redis:
+  address: ${REDIS_ADDRESS}
