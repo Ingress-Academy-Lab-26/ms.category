@@ -3,5 +3,8 @@ package az.ingress.mscategory.dao.repository;
 import az.ingress.mscategory.dao.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {}
+import java.util.List;
 
+public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
+    List<CategoryEntity> findByBaseId(Long categoryId);
+}
