@@ -67,18 +67,3 @@ INSERT INTO categories (name, parent_id) VALUES ('Early Readers', 25);     -- id
 INSERT INTO categories (name, parent_id) VALUES ('Textbooks', 26);         -- id = 38
 INSERT INTO categories (name, parent_id) VALUES ('Reference Books', 26);   -- id = 39
 INSERT INTO categories (name, parent_id) VALUES ('Dictionaries', 26);
-
--- Example query to retrieve the entire tree structure
--- This recursive query may help you visualize the structure
-
-WITH RECURSIVE category_tree AS (
-    SELECT id, name, parent_id, 1 AS level
-    FROM categories
-    WHERE parent_id IS NULL
-    UNION ALL
-    SELECT c.id, c.name, c.parent_id, ct.level + 1 AS level
-    FROM categories c
-    INNER JOIN category_tree ct ON c.parent_id = ct.id
-)
-SELECT * FROM category_tree
-ORDER BY level, parent_id, id;

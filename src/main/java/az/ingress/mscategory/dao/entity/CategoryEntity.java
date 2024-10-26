@@ -1,13 +1,14 @@
 package az.ingress.mscategory.dao.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
-import java.util.Set;
 
-import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 
@@ -23,13 +24,7 @@ public class CategoryEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "parent_id")
-    @ToString.Exclude
-    private CategoryEntity parent;
-    @OneToMany(mappedBy = "parent")
-    @ToString.Exclude
-    private Set<CategoryEntity> children;
+    private Long parentId;
 
     @Override
     public final boolean equals(Object o) {
