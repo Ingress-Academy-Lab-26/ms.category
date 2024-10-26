@@ -1,9 +1,9 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version "$springBootVersion"
-    id 'io.spring.dependency-management' version "$dependencyManagementVersion"
+    id "java"
+    id "groovy"
+    id "org.springframework.boot" version "${springBootVersion}"
+    id "io.spring.dependency-management" version "${dependencyManagementVersion}"
 }
-
 group = 'az.ingress'
 sourceCompatibility = "17"
 
@@ -17,28 +17,42 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    }
+}
+
 dependencies {
+    //spring
+    implementation "org.springframework.boot:spring-boot-starter-web"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    runtimeOnly 'org.postgresql:postgresql'
-    compileOnly 'org.projectlombok:lombok'
-    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    //lombok
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor('org.mapstruct:mapstruct-processor:1.5.5.Final')
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '3.1.0'
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApiVersion"
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.amqp:spring-rabbit'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.redisson:redisson-spring-boot-starter:3.33.0'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.4'
+    compileOnly 'org.projectlombok:lombok'
+
+    //swagger
+    implementation "org.springdoc:springdoc-openapi-ui:$openApiVersion"
+
+    //postgresql
+    runtimeOnly 'org.postgresql:postgresql'
+
+    //redis
+    implementation "org.redisson:redisson-spring-boot-starter:${redisVersion}"
+    implementation "io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}"
+
+    //liquibase
     implementation 'org.liquibase:liquibase-core'
 
     //testing
     testImplementation "org.apache.groovy:groovy:$groovyVersion"
     testImplementation "org.spockframework:spock-spring:$spockSpringVersion"
     testImplementation "io.github.benas:random-beans:$randomBeansVersion"
-
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
 }
 

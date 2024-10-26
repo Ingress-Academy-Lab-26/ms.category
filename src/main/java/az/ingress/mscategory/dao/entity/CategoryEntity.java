@@ -1,50 +1,58 @@
 package az.ingress.mscategory.dao.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Objects;
-import java.util.Set;
+import az.ingress.mscategory.model.enums.CategoryStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.IDENTITY;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import static az.ingress.mscategory.model.enums.CategoryStatus.ACTIVE;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@EqualsAndHashCode(of = "id")
+@Builder
 @Entity
 @Table(name = "categories")
-public class CategoryEntity {
+public class CategoryEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "parent_id")
-    @ToString.Exclude
-    private CategoryEntity parent;
-    @OneToMany(mappedBy = "parent")
-    @ToString.Exclude
-    private Set<CategoryEntity> children;
+    private Long baseId;
+    private String picture;
+    @Enumerated(value = STRING)
+    private CategoryStatus status;
+    @CreationTimestamp
+    LocalDateTime createdAt;
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
 
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        CategoryEntity that = (CategoryEntity) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    @PrePersist
+    private void setStatus() {
+        this.status = ACTIVE;
     }
 }
 
